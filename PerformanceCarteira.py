@@ -56,7 +56,7 @@ def carregar_dados(empresas):
 
 @st.cache_data
 def carregar_tickers_acoes():
-    base_tickers = pd.read_csv(r'C:\Ana\GitHub\PerformanceCarteira\IBOV.csv', sep=';')              
+    base_tickers = pd.read_csv('IBOV.csv', sep=';')              
     tickers = [f"{codigo}.SA" for codigo in base_tickers["Codigo"]]
     return tickers
 
