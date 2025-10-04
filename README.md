@@ -16,9 +16,11 @@ Este projeto representa a união de tecnologia e finanças, mostrando como a an�
 
 ⚡ Interatividade com Streamlit: uma interface leve que facilita a exploração dos resultados em tempo real.
 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 #### Manual de Funcionamento - App Preço de açoes
-1.Objetivo do app </br>
+1. Objetivo do app </br>
 O aplicativo permite visualizar a evolução histórica dos preços das ações do IBOV e calcular a performance individual e da carteira em um período selecionado.</br>
+
 2. Passo a passo de uso</br>
 🔹 Tela Inicial</br>
 O app exibe um título e uma breve descrição. Em seguida, os dados das ações começam a ser carregados (pode levar alguns segundos).</br>
@@ -32,7 +34,7 @@ O app calcula e apresenta: A performance individual de cada ativo. A performance
 
 Os resultados aparecem destacados em verde (positivo) ou vermelho (negativo).
 
-
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 #### Entendendo o desenvolvimento do aplicativo e suas ferramentas
 
 #### Streamlit: como compartilhar uma aplicação de dados facilmente
@@ -47,14 +49,11 @@ Além de deixar a apresentação com uma aparência muito profissional. Para o d
 #### Configurando o ambiente
 Para começar, vamos criar um ambiente virtual onde iremos instalar as bibliotecas que serão utilizadas no desenvolvimento do projeto. 
 Podemos criar uma pasta onde ficarão os arquivos do nosso projeto, nomeá-la como "PerformanceCarteira", por exemplo, e em seguida, acessá-la por meio do editor de código.
-Na pasta podemos criar um arquivo chamado requirements.txt para colocar as bibliotecas que queremos instalar no nosso ambiente virtual:
-
-#########################################################
-#####  pandas
-#####  yfinance
-#####  streamlit
-#####  datetime
-#########################################################
+Na pasta podemos criar um arquivo chamado requirements.txt para colocar as bibliotecas que queremos instalar no nosso ambiente virtual: </br>
+• pandas </br>
+• yfinance </br>
+• streamlit </br>
+• datetime </br>
 
 Depois disso, para criar, ativar e instalar os pacotes no ambiente virtual , podemos abrir o terminal do próprio editor de texto utilizando o atalho Ctrl + J e executar os seguintes comandos:
 
@@ -80,7 +79,8 @@ st.title('Bem vindo ao app Performance de Carteira') </br>
 
 Para conseguirmos visualizar esse código em ação, podemos abrir o terminal e digitar o seguinte comando:
 
-streamlit run performancecarteira.py
+streamlit run performancecarteira.py </br>
+
 Após alguns segundos, uma página deve abrir apresentando o texto que escrevemos:  'Bem vindo ao app Performance de Carteira'
 
 Assim, temos nossa primeira aplicação rodando! No entanto, observe que nesse link está escrito localhost:8501, o que indica que nossa aplicação está rodando apenas localmente, ou seja, ela ainda não está disponível na web para outras pessoas acessarem.
@@ -88,7 +88,7 @@ Assim, temos nossa primeira aplicação rodando! No entanto, observe que nesse l
 Para desenvolver o projeto Dashboar de açoes, foi utilizada uma base de dados inicial chamada ibov.csv. Você pode acessá-lo clicando no repositório. Com o arquivo baixado, podemos salvá-lo na pasta do nosso projeto.
 
 No arquivo performancecarteira.py podemos apagar o trecho de código escrito anteriormente e fazer as seguintes importações:
-import streamlit as st
+import streamlit as st 
 import pandas as pd
 import yfinance as yf
 from datetime import timedelta
@@ -97,8 +97,35 @@ Após isso, vamos construir o código das seguintes funçoes: </br>
 carregar_tickers_acoes > A função carregar_tickers_acoes() lê a lista de ações do IBOV em um CSV e retorna seus tickers formatados para consulta no Yahoo Finance. </br>
 carregar_dados() > A função carregar_dados baixa e retorna os preços históricos ajustados das ações a partir do Yahoo Finance. </br>
 
-veja o codigo fonte das funçoes no arquivo performancecarteira.py
+OBS.: veja o codigo fonte das funçoes no arquivo performancecarteira.py
 
+À medida que vamos desenvolvendo nosso projeto, é interessante ir acompanhando o progresso também por meio da visualização da página.
+No proximo passo criaremos os elementos graficos que vão interagir com o usuario na nossa pagina:
+• Menu lateral (sidebar) com seleção de ações (multiselect) e ajuste de período (slider).
+• Gráfico de linha exibindo a evolução dos preços das ações.
+• Mensagens visuais destacando performances individuais e da carteira em cores (verde, vermelho ou neutro).
+• Alertas informativos em caso de ausência de dados ou durante o carregamento.
+
+Apos desenvolvimento do codigo, criamos um repositorio e fazemos upload do nosso projeto para o GitHub.
+Com isso, estamos pronto para fazermos o deploy.
+
+
+#### Solicitando acesso à nuvem do Streamlit
+
+Para conseguirmos fazer o deploy, precisamos solicitar acesso às máquinas virtuais da nuvem do Streamlit. Essa solicitação é realizada diretamente pela documentação.
+E a solicitaçao do serviço de deploy é bem simples, basta seguir o passo a passo apresentado pela plataforma.
+
+Informaremos os dados do nosso projeto no GitHub na página "Deploy an app". Na primeira parte do formulário, devemos colocar o repositório onde está nosso projeto. 
+Você pode fazer isso colocando seu nome de usuário do GitHub, uma barra e o nome do repositório, ou ainda pode copiar o link do repositório e colar.
+
+Na segunda parte do formulário, a Branch, não é necessário fazer nenhuma alteração agora. Em "Main file path" devemos colocar o nome do arquivo que está no GitHub com o código principal da nossa aplicação. 
+No nosso caso, esse é o performancecarteira.py
+Feito o preenchimento do formulário, podemos clicar em "Deploy!" para começar a realizar o deploy da nossa aplicação. Esse processo pode demorar alguns minutos para carregar.
+Agora a aplicação está finalizada e pronta para ser compartilhada!
+
+Observe que não temos mais aquela url com "localhost" escrita. Isso indica que a aplicação não está rodando apenas localmente na nossa máquina, mas em uma máquina virtual permitindo que qualquer pessoa consiga acessá-la.
+
+Você pode acessar a aplicação criada neste artigo, clicando [aqui](https://performancecarteiraibov.streamlit.app/).
 
 
 
