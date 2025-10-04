@@ -34,6 +34,8 @@ O app calcula e apresenta: A performance individual de cada ativo. A performance
 
 Os resultados aparecem destacados em verde (positivo) ou vermelho (negativo).
 
+Clique [aqui](https://performancecarteiraibov.streamlit.app/) e veja como funciona.
+
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 #### Entendendo o desenvolvimento do aplicativo e suas ferramentas
 
