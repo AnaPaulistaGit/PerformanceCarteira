@@ -36,6 +36,8 @@ Os resultados aparecem destacados em verde (positivo) ou vermelho (negativo).
 
 Clique [aqui](https://performancecarteiraibov.streamlit.app/) e veja como funciona.
 
+<img width="917" height="588" alt="AppPerformanceCarteira2" src="https://github.com/user-attachments/assets/afe995b7-ad0b-4fc8-8366-f7304cb72306" />
+
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 #### Entendendo o desenvolvimento do aplicativo e suas ferramentas
 
