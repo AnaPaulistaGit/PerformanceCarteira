@@ -49,7 +49,7 @@ def carregar_dados(empresas):
 # Função para carregar tickers das ações do IBOV
 @st.cache_data
 def carregar_tickers_acoes():
-    base_tickers = pd.read_csv(r'C:\Ana\GitHub\PerformanceCarteira\IBOV.csv', sep=';')              
+    base_tickers = pd.read_csv(r'IBOV.csv', sep=';')              
     tickers = [item + ".SA" for item in base_tickers["Codigo"]]
     return tickers
 
