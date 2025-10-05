@@ -1,6 +1,7 @@
 #########################################################################################
 #
-# git remote add origin https://github.com/AnaPaulistaGit/PerformanceCarteira.git 🚀 👀 💥😱 🔵 🌟
+# Performance Carteira - Dashboard de Açoes 🚀 👀 💥😱 🔵 🌟
+# https://github.com/AnaPaulistaGit/PerformanceCarteira.git 
 #
 # Nesse projeto vamos construir um aplicativo que mostra a evoluçao dos preços das
 # das principais açoes negociadas no IBOVESPA ao longo dos anos.
@@ -34,50 +35,40 @@ import pandas as pd
 import yfinance as yf
 from datetime import timedelta
 
-
-# 👉 Função para carregar dados (com tratamento para 1 ticker vs vários)
-@st.cache_data(show_spinner=False)
+# Função para carregar dados das ações
+@st.cache_data
 def carregar_dados(empresas):
-    cotacoes = yf.download(
-        empresas,
-        start="2020-01-01",
-        end="2026-01-01",
-        auto_adjust=True,
-        threads=True
-    )
-
-    # Se for apenas um ticker → colunas simples
-    if isinstance(cotacoes.columns, pd.MultiIndex):
+    cotacoes = yf.download(empresas, start="2020-01-01", end="2026-01-01", auto_adjust=True)
+    # Garante que existe a coluna "Close" (quando há apenas uma ação, o DataFrame é diferente)
+    if "Close" in cotacoes:
         cotacoes = cotacoes["Close"]
     else:
-        cotacoes = cotacoes[["Close"]]
+        cotacoes = cotacoes
     return cotacoes
 
-
+# Função para carregar tickers das ações do IBOV
 @st.cache_data
 def carregar_tickers_acoes():
-    base_tickers = pd.read_csv('IBOV.csv', sep=';')              
-    tickers = [f"{codigo}.SA" for codigo in base_tickers["Codigo"]]
+    base_tickers = pd.read_csv(r'C:\Ana\GitHub\PerformanceCarteira\IBOV.csv', sep=';')              
+    tickers = [item + ".SA" for item in base_tickers["Codigo"]]
     return tickers
 
-
-# 👉 Exibe mensagem de carregamento enquanto busca os dados 
-with st.spinner("Aguarde enquanto os dados são carregados..."):
-    acoes = carregar_tickers_acoes()
-    dados = carregar_dados(acoes)
-
-
-# 👉 Interface do aplicativo
+# Interface do Streamlit
 st.write("""
 # App Preço de Ações
 O gráfico abaixo representa a evolução do preço das ações ao longo dos anos
 """)
 
+# Exibe mensagem de carregamento enquanto dados são baixados
+with st.spinner("Aguarde enquanto os dados são carregados..."):
+    acoes = carregar_tickers_acoes()
+    dados = carregar_dados(acoes)
+
+# Painel lateral (sidebar)
 st.sidebar.header("Filtros")
 
-# 👉 filtro de ações
+# Filtro de ações
 lista_acoes = st.sidebar.multiselect("Escolha as ações para visualizar", dados.columns)
-
 if lista_acoes:
     dados = dados[lista_acoes]
     if len(lista_acoes) == 1:
@@ -85,54 +76,55 @@ if lista_acoes:
         dados = dados.rename(columns={acao_unica: "Close"})
 
 if not dados.empty:
-    # filtro de datas
+    # Filtro de datas
     data_inicial = dados.index.min().to_pydatetime()
     data_final = dados.index.max().to_pydatetime()
-
     intervalo_data = st.sidebar.slider(
-        "Selecione o período", 
-        min_value=data_inicial, 
+        "Selecione o período",
+        min_value=data_inicial,
         max_value=data_final,
         value=(data_inicial, data_final),
         step=timedelta(days=1)
     )
 
-    # aplica o filtro de datas
+    # Filtra os dados pelo período selecionado
     dados = dados.loc[intervalo_data[0]:intervalo_data[1]]
 
-    # 👉 cria o gráfico
+    # Cria o gráfico
     st.line_chart(dados)
 
-    # 👉 cálculo de performance
+    # Cálculo de performance
+    texto_performance_ativos = ""
+
     if len(lista_acoes) == 0:
         lista_acoes = list(dados.columns)
     elif len(lista_acoes) == 1:
         dados = dados.rename(columns={"Close": acao_unica})
 
-    # 👉 performance por ativo (vetorizado)
-    inicio = dados.iloc[0]
-    fim = dados.iloc[-1]
-    performance = (fim / inicio - 1).astype(float)
+    carteira = [1000 for _ in lista_acoes]
+    total_inicial_carteira = sum(carteira)
 
-    texto_performance_ativos = ""
-    carteira_inicial = 1000 * len(lista_acoes)
-    carteira_final = 0
-
-    for acao, perf in performance.items():
-        if pd.isna(perf):
+    acoes_validas = []
+    for i, acao in enumerate(lista_acoes):
+        # Verifica se há dados válidos no início e fim do período
+        if pd.isna(dados[acao].iloc[0]) or pd.isna(dados[acao].iloc[-1]):
             texto_performance_ativos += f"  \n{acao}: :orange[sem dados suficientes para cálculo]"
             continue
 
-        carteira_final += 1000 * (1 + perf)
+        performance_ativo = dados[acao].iloc[-1] / dados[acao].iloc[0] - 1
+        performance_ativo = float(performance_ativo)
+        carteira[i] *= (1 + performance_ativo)
+        acoes_validas.append(i)
 
-        if perf > 0:
-            texto_performance_ativos += f"  \n{acao}: :green[{perf:.1%}]"
-        elif perf < 0:
-            texto_performance_ativos += f"  \n{acao}: :red[{perf:.1%}]"
+        if performance_ativo > 0:
+            texto_performance_ativos += f"  \n{acao}: :green[{performance_ativo:.1%}]"
+        elif performance_ativo < 0:
+            texto_performance_ativos += f"  \n{acao}: :red[{performance_ativo:.1%}]"
         else:
-            texto_performance_ativos += f"  \n{acao}: {perf:.1%}"
+            texto_performance_ativos += f"  \n{acao}: {performance_ativo:.1%}"
 
-    performance_carteira = carteira_final / carteira_inicial - 1
+    total_final_carteira = sum([carteira[i] for i in acoes_validas])
+    performance_carteira = total_final_carteira / total_inicial_carteira - 1
 
     if performance_carteira > 0:
         texto_performance_carteira = f"Performance da carteira com todos os ativos: :green[{performance_carteira:.1%}]"
@@ -141,12 +133,13 @@ if not dados.empty:
     else:
         texto_performance_carteira = f"Performance da carteira com todos os ativos: {performance_carteira:.1%}"
 
+    # Exibe performance com o período selecionado formatado
     st.subheader("Performance dos Ativos")
-    st.write("Essa foi a performance de cada ativo no período selecionado:")
+    st.write(f"Essa foi a performance de cada ativo no período selecionado: **{intervalo_data[0].strftime('%d/%m/%Y')} a {intervalo_data[1].strftime('%d/%m/%Y')}**")
 
     st.markdown(texto_performance_ativos)
     st.markdown(texto_performance_carteira)
 
 else:
     st.warning("Nenhum dado disponível para as ações selecionadas.")
-
+    
