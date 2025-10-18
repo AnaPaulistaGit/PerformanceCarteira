@@ -10,7 +10,7 @@ Este projeto representa a união de tecnologia e finanças, mostrando como a an�
 
 🚀 Automatização inteligente: elimina a necessidade de buscar dados manualmente em diversas fontes.
 
-📈 Análises claras e objetivas: gráficos e métricas que traduzem rapidamente a performance do mercado.
+📈 Análise clara e objetiva: gráfico e métrica que traduz rapidamente a performance do mercado.
 
 💡 Acessível e didático: ideal tanto para estudantes quanto para profissionais de finanças e tecnologia.
 
